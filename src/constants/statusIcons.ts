@@ -11,11 +11,11 @@ export const STATUS_LABELS = {
 } as const;
 
 export const MENU_ICONS = {
-	NEW_WORKTREE: '⊕',
-	MERGE_WORKTREE: '⇄',
-	DELETE_WORKTREE: '✕',
-	CONFIGURE_SHORTCUTS: '⌨',
-	EXIT: '⏻',
+	NEW_WORKTREE: '',
+	MERGE_WORKTREE: '',
+	DELETE_WORKTREE: '',
+	CONFIGURE_SHORTCUTS: '',
+	EXIT: '',
 } as const;
 
 export const getStatusDisplay = (

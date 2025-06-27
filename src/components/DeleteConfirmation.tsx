@@ -97,7 +97,7 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
 	return (
 		<Box flexDirection="column">
 			<Text bold color="red">
-				⚠️ Delete Confirmation
+				Delete Confirmation
 			</Text>
 
 			<Box marginTop={1} marginBottom={1} flexDirection="column">

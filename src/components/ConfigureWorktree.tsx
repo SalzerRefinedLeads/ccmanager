@@ -38,7 +38,7 @@ const ConfigureWorktree: React.FC<ConfigureWorktreeProps> = ({onComplete}) => {
 
 	const menuItems: MenuItem[] = [
 		{
-			label: `Auto Directory: ${autoDirectory ? '✅ Enabled' : '❌ Disabled'}`,
+			label: `Auto Directory: ${autoDirectory ? 'Enabled' : 'Disabled'}`,
 			value: 'toggle',
 		},
 		{
@@ -46,11 +46,11 @@ const ConfigureWorktree: React.FC<ConfigureWorktreeProps> = ({onComplete}) => {
 			value: 'pattern',
 		},
 		{
-			label: '💾 Save Changes',
+			label: 'Save Changes',
 			value: 'save',
 		},
 		{
-			label: '← Cancel',
+			label: 'Cancel',
 			value: 'cancel',
 		},
 	];

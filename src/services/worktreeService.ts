@@ -366,7 +366,10 @@ export class WorktreeService {
 		}
 	}
 
-	hasUncommittedChanges(worktreePath: string): {hasChanges: boolean; files?: string[]} {
+	hasUncommittedChanges(worktreePath: string): {
+		hasChanges: boolean;
+		files?: string[];
+	} {
 		try {
 			const output = execSync('git status --porcelain', {
 				cwd: worktreePath,
@@ -415,7 +418,8 @@ export class WorktreeService {
 		} catch (error) {
 			return {
 				success: false,
-				error: error instanceof Error ? error.message : 'Failed to commit changes',
+				error:
+					error instanceof Error ? error.message : 'Failed to commit changes',
 			};
 		}
 	}

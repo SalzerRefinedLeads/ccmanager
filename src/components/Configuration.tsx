@@ -23,23 +23,23 @@ const Configuration: React.FC<ConfigurationProps> = ({onComplete}) => {
 
 	const menuItems: MenuItem[] = [
 		{
-			label: 'S ⌨  Configure Shortcuts',
+			label: 'S  Configure Shortcuts',
 			value: 'shortcuts',
 		},
 		{
-			label: 'H 🔧  Configure Status Hooks',
+			label: 'H  Configure Status Hooks',
 			value: 'hooks',
 		},
 		{
-			label: 'W 📁  Configure Worktree Settings',
+			label: 'W  Configure Worktree Settings',
 			value: 'worktree',
 		},
 		{
-			label: 'C 🚀  Configure Command',
+			label: 'C  Configure Command',
 			value: 'command',
 		},
 		{
-			label: 'B ← Back to Main Menu',
+			label: 'B  Back to Main Menu',
 			value: 'back',
 		},
 	];

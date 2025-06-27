@@ -52,10 +52,10 @@ const ConfigureHooks: React.FC<ConfigureHooksProps> = ({onComplete}) => {
 		// Add status hook items
 		(['idle', 'busy', 'waiting_input'] as SessionState[]).forEach(status => {
 			const hook = hooks[status];
-			const enabled = hook?.enabled ? '✓' : '✗';
+			const enabled = hook?.enabled ? 'Enabled' : 'Disabled';
 			const command = hook?.command || '(not set)';
 			items.push({
-				label: `${STATUS_LABELS[status]}: ${enabled} ${command}`,
+				label: `${STATUS_LABELS[status]}: ${enabled} - ${command}`,
 				value: status,
 			});
 		});
@@ -66,12 +66,12 @@ const ConfigureHooks: React.FC<ConfigureHooksProps> = ({onComplete}) => {
 		});
 
 		items.push({
-			label: '💾 Save and Return',
+			label: 'Save and Return',
 			value: 'save',
 		});
 
 		items.push({
-			label: '← Cancel',
+			label: 'Cancel',
 			value: 'cancel',
 		});
 
@@ -115,7 +115,7 @@ const ConfigureHooks: React.FC<ConfigureHooksProps> = ({onComplete}) => {
 	if (showSaveMessage) {
 		return (
 			<Box flexDirection="column">
-				<Text color="green">✓ Configuration saved successfully!</Text>
+				<Text color="green">Configuration saved successfully!</Text>
 			</Box>
 		);
 	}
@@ -147,7 +147,7 @@ const ConfigureHooks: React.FC<ConfigureHooksProps> = ({onComplete}) => {
 
 				<Box marginBottom={1}>
 					<Text>
-						Enabled: {currentEnabled ? '✓' : '✗'} (Press Tab to toggle)
+						Enabled: {currentEnabled ? 'Yes' : 'No'} (Press Tab to toggle)
 					</Text>
 				</Box>
 

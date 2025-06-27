@@ -221,8 +221,10 @@ const App: React.FC = () => {
 		}
 
 		// Check for uncommitted changes in source worktree
-		const changesResult = worktreeService.hasUncommittedChanges(sourceWorktree.path);
-		
+		const changesResult = worktreeService.hasUncommittedChanges(
+			sourceWorktree.path,
+		);
+
 		if (changesResult.hasChanges) {
 			// Store merge details and show commit interface
 			setPendingMerge({

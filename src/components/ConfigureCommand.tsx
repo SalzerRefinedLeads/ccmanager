@@ -45,14 +45,14 @@ const ConfigureCommand: React.FC<ConfigureCommandProps> = ({onComplete}) => {
 			disabled: false,
 		},
 		{
-			label: hasChanges ? '💾 Save Changes' : '💾 Save Changes (no changes)',
+			label: hasChanges ? 'Save Changes' : 'Save Changes (no changes)',
 			value: '',
 			key: 'save',
 			isButton: true,
 			disabled: !hasChanges,
 		},
 		{
-			label: '❌ Exit Without Saving',
+			label: 'Exit Without Saving',
 			value: '',
 			key: 'exit',
 			isButton: true,
@@ -208,7 +208,7 @@ const ConfigureCommand: React.FC<ConfigureCommandProps> = ({onComplete}) => {
 
 			{hasChanges && (
 				<Box marginBottom={1}>
-					<Text color="yellow">⚠️ You have unsaved changes</Text>
+					<Text color="yellow">You have unsaved changes</Text>
 				</Box>
 			)}
 

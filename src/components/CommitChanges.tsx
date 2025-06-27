@@ -32,13 +32,13 @@ const CommitChanges: React.FC<CommitChangesProps> = ({
 	useEffect(() => {
 		const worktreeService = new WorktreeService();
 		const result = worktreeService.hasUncommittedChanges(worktreePath);
-		
+
 		if (result.hasChanges && result.files) {
 			const fileItems = result.files.map(file => {
 				const status = file.substring(0, 2);
 				const filename = file.substring(3);
 				let statusDesc = '';
-				
+
 				if (status.includes('M')) statusDesc = 'Modified';
 				else if (status.includes('A')) statusDesc = 'Added';
 				else if (status.includes('D')) statusDesc = 'Deleted';
@@ -79,7 +79,7 @@ const CommitChanges: React.FC<CommitChangesProps> = ({
 	const handleCommit = () => {
 		const worktreeService = new WorktreeService();
 		const result = worktreeService.commitChanges(worktreePath, commitMessage);
-		
+
 		if (result.success) {
 			onComplete(true);
 		} else {
@@ -127,7 +127,7 @@ const CommitChanges: React.FC<CommitChangesProps> = ({
 							{label: 'Commit changes', value: 'commit'},
 							{label: 'Proceed without committing', value: 'skip'},
 						]}
-						onSelect={(item) => {
+						onSelect={item => {
 							if (item.value === 'commit') {
 								setStep('enter-message');
 								setIsInputFocused(true);
@@ -172,7 +172,8 @@ const CommitChanges: React.FC<CommitChangesProps> = ({
 
 				<Box marginTop={1}>
 					<Text dimColor>
-						Press Enter to continue, {shortcutManager.getShortcutDisplay('cancel')} to cancel
+						Press Enter to continue,{' '}
+						{shortcutManager.getShortcutDisplay('cancel')} to cancel
 					</Text>
 				</Box>
 			</Box>
@@ -206,7 +207,7 @@ const CommitChanges: React.FC<CommitChangesProps> = ({
 							{label: 'Commit', value: 'commit'},
 							{label: 'Cancel', value: 'cancel'},
 						]}
-						onSelect={(item) => {
+						onSelect={item => {
 							if (item.value === 'commit') {
 								handleCommit();
 							} else {
