@@ -366,6 +366,60 @@ export class WorktreeService {
 		}
 	}
 
+	hasUncommittedChanges(worktreePath: string): {hasChanges: boolean; files?: string[]} {
+		try {
+			const output = execSync('git status --porcelain', {
+				cwd: worktreePath,
+				encoding: 'utf8',
+			}).trim();
+
+			if (!output) {
+				return {hasChanges: false};
+			}
+
+			const files = output.split('\n').map(line => line.trim());
+			return {hasChanges: true, files};
+		} catch {
+			return {hasChanges: false};
+		}
+	}
+
+	commitChanges(
+		worktreePath: string,
+		message: string,
+		filesToAdd: string[] = [],
+	): {success: boolean; error?: string} {
+		try {
+			// Add files (or all if none specified)
+			if (filesToAdd.length > 0) {
+				for (const file of filesToAdd) {
+					execSync(`git add "${file}"`, {
+						cwd: worktreePath,
+						encoding: 'utf8',
+					});
+				}
+			} else {
+				execSync('git add .', {
+					cwd: worktreePath,
+					encoding: 'utf8',
+				});
+			}
+
+			// Commit with message
+			execSync(`git commit -m "${message}"`, {
+				cwd: worktreePath,
+				encoding: 'utf8',
+			});
+
+			return {success: true};
+		} catch (error) {
+			return {
+				success: false,
+				error: error instanceof Error ? error.message : 'Failed to commit changes',
+			};
+		}
+	}
+
 	deleteWorktreeByBranch(branch: string): {success: boolean; error?: string} {
 		try {
 			// Get worktrees to find the worktree by branch

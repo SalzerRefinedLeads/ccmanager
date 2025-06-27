@@ -5,6 +5,7 @@ import Session from './Session.js';
 import NewWorktree from './NewWorktree.js';
 import DeleteWorktree from './DeleteWorktree.js';
 import MergeWorktree from './MergeWorktree.js';
+import CommitChanges from './CommitChanges.js';
 import Configuration from './Configuration.js';
 import {SessionManager} from '../services/sessionManager.js';
 import {WorktreeService} from '../services/worktreeService.js';
@@ -19,6 +20,7 @@ type View =
 	| 'delete-worktree'
 	| 'deleting-worktree'
 	| 'merge-worktree'
+	| 'commit-changes'
 	| 'merging-worktree'
 	| 'configuration';
 
@@ -30,6 +32,13 @@ const App: React.FC = () => {
 	const [activeSession, setActiveSession] = useState<SessionType | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [menuKey, setMenuKey] = useState(0); // Force menu refresh
+	const [pendingMerge, setPendingMerge] = useState<{
+		sourceBranch: string;
+		targetBranch: string;
+		deleteAfterMerge: boolean;
+		useRebase: boolean;
+		sourceWorktreePath: string;
+	} | null>(null);
 
 	useEffect(() => {
 		// Listen for session exits to return to menu automatically
@@ -198,6 +207,45 @@ const App: React.FC = () => {
 		deleteAfterMerge: boolean,
 		useRebase: boolean,
 	) => {
+		setError(null);
+
+		// Find the source worktree path
+		const worktrees = worktreeService.getWorktrees();
+		const sourceWorktree = worktrees.find(
+			wt => wt.branch && wt.branch.replace('refs/heads/', '') === sourceBranch,
+		);
+
+		if (!sourceWorktree) {
+			setError('Source worktree not found');
+			return;
+		}
+
+		// Check for uncommitted changes in source worktree
+		const changesResult = worktreeService.hasUncommittedChanges(sourceWorktree.path);
+		
+		if (changesResult.hasChanges) {
+			// Store merge details and show commit interface
+			setPendingMerge({
+				sourceBranch,
+				targetBranch,
+				deleteAfterMerge,
+				useRebase,
+				sourceWorktreePath: sourceWorktree.path,
+			});
+			setView('commit-changes');
+			return;
+		}
+
+		// No uncommitted changes, proceed with merge
+		proceedWithMerge(sourceBranch, targetBranch, deleteAfterMerge, useRebase);
+	};
+
+	const proceedWithMerge = async (
+		sourceBranch: string,
+		targetBranch: string,
+		deleteAfterMerge: boolean,
+		useRebase: boolean,
+	) => {
 		setView('merging-worktree');
 		setError(null);
 
@@ -230,6 +278,39 @@ const App: React.FC = () => {
 
 	const handleCancelMergeWorktree = () => {
 		handleReturnToMenu();
+	};
+
+	const handleCommitComplete = (committed: boolean) => {
+		if (!pendingMerge) {
+			handleReturnToMenu();
+			return;
+		}
+
+		if (committed) {
+			// Proceed with the merge after committing
+			proceedWithMerge(
+				pendingMerge.sourceBranch,
+				pendingMerge.targetBranch,
+				pendingMerge.deleteAfterMerge,
+				pendingMerge.useRebase,
+			);
+		} else {
+			// User chose not to commit, proceed anyway
+			proceedWithMerge(
+				pendingMerge.sourceBranch,
+				pendingMerge.targetBranch,
+				pendingMerge.deleteAfterMerge,
+				pendingMerge.useRebase,
+			);
+		}
+
+		// Clear pending merge
+		setPendingMerge(null);
+	};
+
+	const handleCancelCommit = () => {
+		setPendingMerge(null);
+		setView('merge-worktree');
 	};
 
 	if (view === 'menu') {
@@ -320,6 +401,23 @@ const App: React.FC = () => {
 				<MergeWorktree
 					onComplete={handleMergeWorktree}
 					onCancel={handleCancelMergeWorktree}
+				/>
+			</Box>
+		);
+	}
+
+	if (view === 'commit-changes' && pendingMerge) {
+		return (
+			<Box flexDirection="column">
+				{error && (
+					<Box marginBottom={1}>
+						<Text color="red">Error: {error}</Text>
+					</Box>
+				)}
+				<CommitChanges
+					worktreePath={pendingMerge.sourceWorktreePath}
+					onComplete={handleCommitComplete}
+					onCancel={handleCancelCommit}
 				/>
 			</Box>
 		);
